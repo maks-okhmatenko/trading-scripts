@@ -7,9 +7,9 @@ function json_response($code = 200, $message = null){
     header('Content-Type: application/json; charset=utf-8');
     
     return json_encode(array(
-      "status" => $code < 300,
-      "message" => $message
-      ));
+        "status" => $code < 300,
+        "message" => $message
+        ));
 }
 
 //open order API
@@ -90,7 +90,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'OrderClose') {
 
 if (isset($_POST['action']) && $_POST['action'] == 'OpenPosition') {
     if (isset($_POST['account_number'])) {
-        $query = 'SELECT * FROM trades WHERE Login = ' . $_POST['account_number'] . ' AND CloseTime="1970-01-01 00:00:00"';
+        $query = 'SELECT * FROM trades WHERE Login = ' . $_POST['account_number'] . ' AND OpenTime >= "' . $_POST['from_time'] . '" AND CloseTime="1970-01-01 00:00:00"';
         $dbcontroller = new DBController();
         $results = $dbcontroller->executeSelectQuery($query);
         echo json_response(200, $results);
@@ -101,7 +101,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'OpenPosition') {
 
 if (isset($_POST['action']) && $_POST['action'] == 'ClosePosition') {
     if (isset($_POST['account_number'])) {
-        $query = 'SELECT * FROM trades WHERE Login = ' . $_POST['account_number'] . ' AND CloseTime!="1970-01-01 00:00:00"';
+        $query = 'SELECT * FROM trades WHERE Login = ' . $_POST['account_number'] . ' AND OpenTime >= "' . $_POST['from_time'] . '" AND CloseTime!="1970-01-01 00:00:00"';
         $dbcontroller = new DBController();
         $results = $dbcontroller->executeSelectQuery($query);
         echo json_response(200, $results);
